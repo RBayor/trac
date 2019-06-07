@@ -1,0 +1,48 @@
+{
+  "project_info": {
+    "project_number": "891189275677",
+    "firebase_url": "https://trac-eacc7.firebaseio.com",
+    "project_id": "trac-eacc7",
+    "storage_bucket": "trac-eacc7.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:891189275677:android:ee6959be76e10fc8",
+        "android_client_info": {
+          "package_name": "com.example.trac"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "891189275677-rd7k61gjn10majpog1agt42o3e64vcte.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.example.trac",
+            "certificate_hash": "b38b382d4ff7dcc6604df5e539d20686170690b6"
+          }
+        },
+        {
+          "client_id": "891189275677-voukk4b5ncgjrfk0tsjpvu79pp0424ek.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyDreSp_JqYn0s5i6P0G-_PvrF2Z8RDgavQ"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "891189275677-voukk4b5ncgjrfk0tsjpvu79pp0424ek.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
