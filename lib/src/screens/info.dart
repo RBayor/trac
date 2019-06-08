@@ -18,6 +18,7 @@ class Info extends StatefulWidget {
 class _InfoState extends State<Info> {
   DateTime _lastPeriod = DateTime.now();
   DateTime _yearBorn = DateTime.now();
+  final GlobalKey<ScaffoldState> _scaffoldKey = GlobalKey<ScaffoldState>();
 
   //bool _check = false;
   int periodCount;
@@ -102,51 +103,53 @@ class _InfoState extends State<Info> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      key: _scaffoldKey,
       appBar: AppBar(
         centerTitle: true,
         title: Text("Info Your Period"),
       ),
-      body: Column(
-        mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-        children: <Widget>[
-          Card(
-            elevation: 8.0,
-            shape: RoundedRectangleBorder(
-              borderRadius: BorderRadius.circular(10.0),
-            ),
-            margin: EdgeInsets.only(
-                left: 15.0, right: 15.0, top: 15.0, bottom: 5.0),
-            child: ListTile(
-              leading: Icon(
-                Icons.face,
-                color: Colors.deepPurpleAccent,
+      body: Builder(builder: (context) {
+        return Column(
+          mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+          children: <Widget>[
+            Card(
+              elevation: 8.0,
+              shape: RoundedRectangleBorder(
+                borderRadius: BorderRadius.circular(10.0),
               ),
-              title: Text(
-                'Tell us a little about yourself',
-                style: TextStyle(fontSize: 20.0, fontWeight: FontWeight.bold),
-              ),
-              subtitle:
-                  Text("Tap the calendar icons to select dates. Save After."),
-            ),
-          ),
-          Card(
-            shape: RoundedRectangleBorder(
-              borderRadius: BorderRadius.circular(10.0),
-            ),
-            elevation: 8.0,
-            margin: EdgeInsets.only(
-                left: 12.0, right: 12.0, top: 15.0, bottom: 5.0),
-            child: Padding(
-              padding: const EdgeInsets.all(8.0),
+              margin: EdgeInsets.only(
+                  left: 15.0, right: 15.0, top: 15.0, bottom: 5.0),
               child: ListTile(
-                title: Text(
-                  'When was your last period?',
-                  style: TextStyle(fontSize: 16.0),
+                leading: Icon(
+                  Icons.face,
+                  color: Colors.deepPurpleAccent,
                 ),
-                subtitle: Row(
-                  mainAxisSize: MainAxisSize.min,
-                  children: <Widget>[
-                    /* Text(
+                title: Text(
+                  'Tell us a little about yourself',
+                  style: TextStyle(fontSize: 20.0, fontWeight: FontWeight.bold),
+                ),
+                subtitle:
+                    Text("Tap the calendar icons to select dates. Save After."),
+              ),
+            ),
+            Card(
+              shape: RoundedRectangleBorder(
+                borderRadius: BorderRadius.circular(10.0),
+              ),
+              elevation: 8.0,
+              margin: EdgeInsets.only(
+                  left: 12.0, right: 12.0, top: 15.0, bottom: 5.0),
+              child: Padding(
+                padding: const EdgeInsets.all(8.0),
+                child: ListTile(
+                  title: Text(
+                    'When was your last period?',
+                    style: TextStyle(fontSize: 16.0),
+                  ),
+                  subtitle: Row(
+                    mainAxisSize: MainAxisSize.min,
+                    children: <Widget>[
+                      /* Text(
                       "forgot?",
                       style: TextStyle(fontSize: 16.0),
                     ),
@@ -154,120 +157,143 @@ class _InfoState extends State<Info> {
                       onChanged: (bool e) => myCheckState(),
                       value: _check,
                     ),*/
-                    Text(
-                        "Selected: ${_lastPeriod.day.toString()}/${_lastPeriod.month.toString().padLeft(2, '0')}/${_lastPeriod.year.toString().padLeft(2, '0')}"),
-                  ],
-                ),
-                leading: IconButton(
-                  icon: Icon(Icons.calendar_today),
-                  color: Colors.deepPurpleAccent,
-                  onPressed: () {
-                    _selectDate(context);
-                  },
-                ),
-              ),
-            ),
-          ),
-          Card(
-            shape: RoundedRectangleBorder(
-              borderRadius: BorderRadius.circular(10.0),
-            ),
-            elevation: 8.0,
-            margin: EdgeInsets.only(
-                left: 12.0, right: 12.0, top: 15.0, bottom: 5.0),
-            child: Padding(
-              padding: const EdgeInsets.all(8.0),
-              child: ListTile(
-                title: Text(
-                  'Date of birth',
-                  style: TextStyle(fontSize: 16.0),
-                ),
-                subtitle: Text(
-                    "Selected ${_yearBorn.year.toString().padLeft(2, '0')}"),
-                leading: IconButton(
-                  icon: Icon(Icons.calendar_today),
-                  color: Colors.deepPurpleAccent,
-                  onPressed: () {
-                    _selectYear(context);
-                  },
+                      Text(
+                          "Selected: ${_lastPeriod.day.toString()}/${_lastPeriod.month.toString().padLeft(2, '0')}/${_lastPeriod.year.toString().padLeft(2, '0')}"),
+                    ],
+                  ),
+                  leading: IconButton(
+                    icon: Icon(Icons.calendar_today),
+                    color: Colors.deepPurpleAccent,
+                    onPressed: () {
+                      _selectDate(context);
+                    },
+                  ),
                 ),
               ),
             ),
-          ),
-          Card(
-            shape: RoundedRectangleBorder(
-              borderRadius: BorderRadius.circular(10.0),
-            ),
-            elevation: 8.0,
-            margin: EdgeInsets.only(
-                left: 12.0, right: 12.0, top: 15.0, bottom: 5.0),
-            child: Padding(
-              padding: const EdgeInsets.all(8.0),
-              child: ListTile(
-                title: Text(
-                  'Averagely how long does your period last?',
-                  style: TextStyle(fontSize: 16.0),
-                ),
-                subtitle: DropdownButton(
-                  hint: Text("Select a number"),
-                  value: periodCount,
-                  items: _dropDownPeriod(),
-                  onChanged: (value) {
-                    setState(() {
-                      periodCount = value;
-                    });
-                  },
+            Card(
+              shape: RoundedRectangleBorder(
+                borderRadius: BorderRadius.circular(10.0),
+              ),
+              elevation: 8.0,
+              margin: EdgeInsets.only(
+                  left: 12.0, right: 12.0, top: 15.0, bottom: 5.0),
+              child: Padding(
+                padding: const EdgeInsets.all(8.0),
+                child: ListTile(
+                  title: Text(
+                    'Date of birth',
+                    style: TextStyle(fontSize: 16.0),
+                  ),
+                  subtitle: Text(
+                      "Selected ${_yearBorn.year.toString().padLeft(2, '0')}"),
+                  leading: IconButton(
+                    icon: Icon(Icons.calendar_today),
+                    color: Colors.deepPurpleAccent,
+                    onPressed: () {
+                      _selectYear(context);
+                    },
+                  ),
                 ),
               ),
             ),
-          ),
-          Card(
-            shape: RoundedRectangleBorder(
-              borderRadius: BorderRadius.circular(10.0),
-            ),
-            elevation: 8.0,
-            margin: EdgeInsets.only(
-                left: 12.0, right: 12.0, top: 15.0, bottom: 5.0),
-            child: Padding(
-              padding: const EdgeInsets.all(8.0),
-              child: ListTile(
-                title: Text(
-                  'How long is your cycle?',
-                  style: TextStyle(fontSize: 16.0),
-                ),
-                subtitle: DropdownButton(
-                  hint: Text("Select a number"),
-                  value: cycleCount,
-                  items: _dropDownCycle(),
-                  onChanged: (value) {
-                    setState(() {
-                      cycleCount = value;
-                    });
-                  },
+            Card(
+              shape: RoundedRectangleBorder(
+                borderRadius: BorderRadius.circular(10.0),
+              ),
+              elevation: 8.0,
+              margin: EdgeInsets.only(
+                  left: 12.0, right: 12.0, top: 15.0, bottom: 5.0),
+              child: Padding(
+                padding: const EdgeInsets.all(8.0),
+                child: ListTile(
+                  title: Text(
+                    'Averagely how long does your period last?',
+                    style: TextStyle(fontSize: 16.0),
+                  ),
+                  subtitle: DropdownButton(
+                    hint: Text("Select a number"),
+                    value: periodCount,
+                    items: _dropDownPeriod(),
+                    onChanged: (value) {
+                      setState(() {
+                        periodCount = value;
+                      });
+                    },
+                  ),
                 ),
               ),
             ),
-          ),
-        ],
-      ),
+            Card(
+              shape: RoundedRectangleBorder(
+                borderRadius: BorderRadius.circular(10.0),
+              ),
+              elevation: 8.0,
+              margin: EdgeInsets.only(
+                  left: 12.0, right: 12.0, top: 15.0, bottom: 5.0),
+              child: Padding(
+                padding: const EdgeInsets.all(8.0),
+                child: ListTile(
+                  title: Text(
+                    'How long is your cycle?',
+                    style: TextStyle(fontSize: 16.0),
+                  ),
+                  subtitle: DropdownButton(
+                    hint: Text("Select a number"),
+                    value: cycleCount,
+                    items: _dropDownCycle(),
+                    onChanged: (value) {
+                      setState(() {
+                        cycleCount = value;
+                      });
+                    },
+                  ),
+                ),
+              ),
+            ),
+          ],
+        );
+      }),
       floatingActionButton: RaisedButton(
         child: Text(
           "Save",
           style: TextStyle(color: Colors.white),
         ),
         color: Colors.deepPurpleAccent,
-        onPressed: saveData,
+        onPressed: () {
+          bool isSaved = saveData();
+          print("is saved is $isSaved");
+          if (isSaved) {
+            SnackBar snackBar = SnackBar(
+              content: Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: <Widget>[
+                  Text(
+                    "Successfully Saved",
+                    style: TextStyle(color: Colors.green),
+                  ),
+                  Icon(
+                    Icons.check,
+                    color: Colors.green,
+                  ),
+                ],
+              ),
+            );
+            _scaffoldKey.currentState.showSnackBar(snackBar);
+          }
+        },
       ),
     );
   }
 
-  void saveData() {
+  bool saveData() {
     Data data = Data(_lastPeriod, _yearBorn, periodCount, cycleCount);
     print("Here is the data !!!!!!!!!!!!!!!!!!!!!!! ${data.periodLength}");
     saveStringPreference("lastPeriod", data.lastPeriod.toString());
     saveStringPreference("birthYear", data.birthYear.toString());
     saveIntPreference("periodLength", data.periodLength);
     saveIntPreference("cycleLength", data.cycleLength);
+    return true;
   }
   /*myCheckState() {
     setState(() {

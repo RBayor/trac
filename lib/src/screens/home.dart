@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:trac/src/auth.dart';
 import 'package:trac/src/screens/info.dart';
+import 'package:trac/src/screens/profile.dart';
 
 class Home extends StatefulWidget {
   Home({this.auth, this.onSignedOut});
@@ -29,7 +30,33 @@ class _HomeState extends State<Home> {
     return value;
   }
 
-  void _signOut() async {
+  void _showDialog() {
+    showDialog(
+        context: context,
+        builder: (BuildContext contetxt) {
+          return AlertDialog(
+            title: Text("Logout"),
+            content: Text("Are you sure you want to logout?"),
+            actions: <Widget>[
+              FlatButton(
+                child: Text("No"),
+                onPressed: () {
+                  Navigator.of(context).pop();
+                },
+              ),
+              FlatButton(
+                child: Text("Yes"),
+                onPressed: () {
+                  _signOut();
+                  Navigator.of(context).pop();
+                },
+              )
+            ],
+          );
+        });
+  }
+
+  _signOut() async {
     try {
       await widget.auth.signOut();
       widget.onSignedOut();
@@ -45,13 +72,16 @@ class _HomeState extends State<Home> {
   }
 
   void refresh() async {
-    this.lastPeriod = DateTime.parse(await getStringPreference("lastPeriod"));
-    this.birthYear = DateTime.parse(await getStringPreference("birthYear"));
-    this.periodLength = await getIntPreference("periodLength");
-    this.cycleLength = await getIntPreference("cycleLength");
-
-    print(
-        "LP is $lastPeriod, BY is $birthYear, PL is $periodLength, CL is $cycleLength");
+    try {
+      this.lastPeriod = DateTime.parse(await getStringPreference("lastPeriod"));
+      this.birthYear = DateTime.parse(await getStringPreference("birthYear"));
+      this.periodLength = await getIntPreference("periodLength");
+      this.cycleLength = await getIntPreference("cycleLength");
+      print(
+          "LP is $lastPeriod, BY is $birthYear, PL is $periodLength, CL is $cycleLength");
+    } catch (e) {
+      print("No Saved data");
+    }
   }
 
   @override
@@ -62,6 +92,7 @@ class _HomeState extends State<Home> {
         title: Text('Track Your Period'),
         actions: <Widget>[
           IconButton(
+            tooltip: 'Log Data',
             icon: Icon(Icons.info),
             onPressed: () {
               Navigator.push(
@@ -70,15 +101,21 @@ class _HomeState extends State<Home> {
           ),
           IconButton(
             icon: Icon(Icons.refresh),
-            onPressed: refresh,
-          ),
-          IconButton(
-            icon: Icon(Icons.exit_to_app),
+            tooltip: 'Refresh Data',
             onPressed: refresh,
           ),
           IconButton(
             icon: Icon(Icons.person_pin),
-            onPressed: refresh,
+            tooltip: 'Profile Page',
+            onPressed: () {
+              Navigator.push(
+                  context, MaterialPageRoute(builder: (context) => Profile()));
+            },
+          ),
+          IconButton(
+            tooltip: 'Logout',
+            icon: Icon(Icons.exit_to_app),
+            onPressed: _showDialog,
           ),
         ],
       ),
@@ -86,6 +123,7 @@ class _HomeState extends State<Home> {
         tooltip: "Log Period",
         elevation: 10.0,
         child: Icon(Icons.calendar_today),
+        onPressed: () {},
       ),
       floatingActionButtonLocation: FloatingActionButtonLocation.centerFloat,
     );
