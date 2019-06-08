@@ -280,6 +280,9 @@ class _InfoState extends State<Info> {
               ),
             );
             _scaffoldKey.currentState.showSnackBar(snackBar);
+            Future.delayed(Duration(seconds: 2), () {
+              Navigator.of(context).pop();
+            });
           }
         },
       ),

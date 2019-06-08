@@ -3,6 +3,7 @@ import 'package:shared_preferences/shared_preferences.dart';
 import 'package:trac/src/auth.dart';
 import 'package:trac/src/screens/info.dart';
 import 'package:trac/src/screens/profile.dart';
+import 'package:trac/src/progressPainter.dart';
 
 class Home extends StatefulWidget {
   Home({this.auth, this.onSignedOut});
@@ -17,6 +18,28 @@ class _HomeState extends State<Home> {
   DateTime birthYear;
   int periodLength;
   int cycleLength;
+  double _percentage;
+
+  getProgressText() {
+    return Text(
+      '0',
+      style: TextStyle(
+          fontSize: 30, fontWeight: FontWeight.w400, color: Colors.green),
+    );
+  }
+
+  progressView() {
+    return CustomPaint(
+      child: Center(
+        child: getProgressText(),
+      ),
+      foregroundPainter: ProgressPainter(
+          defaultCircleColor: Colors.yellowAccent,
+          percentageCompletedColor: Colors.deepPurpleAccent,
+          completedPercentage: _percentage,
+          circleWidth: 50.0),
+    );
+  }
 
   Future<String> getStringPreference(String key) async {
     SharedPreferences prefs = await SharedPreferences.getInstance();
@@ -69,6 +92,7 @@ class _HomeState extends State<Home> {
   void initState() {
     super.initState();
     refresh();
+    _percentage = 0.0;
   }
 
   void refresh() async {
