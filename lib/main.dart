@@ -8,6 +8,7 @@ class Trac extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
+        debugShowCheckedModeBanner: false,
         title: 'Trac Application',
         theme: ThemeData(
             buttonColor: Colors.deepPurpleAccent,
