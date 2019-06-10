@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
+import 'package:trac/src/screens/user.dart';
 
 class Profile extends StatelessWidget {
   @override
@@ -23,7 +24,10 @@ class Profile extends StatelessWidget {
                   child: ListTile(
                     leading: Icon(Icons.person, color: Colors.deepPurple),
                     title: Text("Profile"),
-                    onTap: () {},
+                    onTap: () {
+                      Navigator.of(context).push(
+                          MaterialPageRoute(builder: (context) => UserPage()));
+                    },
                   ),
                 ),
                 Card(

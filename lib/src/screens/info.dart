@@ -24,8 +24,17 @@ class _InfoState extends State<Info> {
   int periodCount;
   int cycleCount;
 
+  checkvals() {
+    try {
+      setState(() async {
+        periodCount = await getIntPreference("periodLength");
+        cycleCount = await getIntPreference("cycleLength");
+      });
+    } catch (e) {}
+  }
+
   List<DropdownMenuItem<int>> _dropDownPeriod() {
-    List<int> items = [4, 5, 6, 7, 8, 9, 10, 11, 12];
+    List<int> items = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12];
 
     return items
         .map((periodVal) => DropdownMenuItem(
@@ -36,7 +45,23 @@ class _InfoState extends State<Info> {
   }
 
   List<DropdownMenuItem<int>> _dropDownCycle() {
-    List<int> items = [21, 22, 23, 24, 25, 26, 27, 28, 29];
+    List<int> items = [
+      21,
+      22,
+      23,
+      24,
+      25,
+      26,
+      27,
+      28,
+      29,
+      30,
+      31,
+      32,
+      33,
+      34,
+      35
+    ];
 
     return items
         .map((value) => DropdownMenuItem(
@@ -50,8 +75,8 @@ class _InfoState extends State<Info> {
     final DateTime picked = await showDatePicker(
         context: context,
         initialDate: _lastPeriod,
-        firstDate: DateTime(2018),
-        lastDate: DateTime(2020));
+        firstDate: DateTime(2019),
+        lastDate: DateTime.now());
 
     if (picked != null && picked != _lastPeriod) {
       print("You selected $_lastPeriod");
@@ -66,7 +91,7 @@ class _InfoState extends State<Info> {
         context: context,
         initialDate: DateTime(1998),
         firstDate: DateTime(1990),
-        lastDate: DateTime(20011));
+        lastDate: DateTime(2011));
 
     if (picked != null && picked != _yearBorn) {
       print("You selected $_yearBorn");
@@ -98,6 +123,12 @@ class _InfoState extends State<Info> {
     SharedPreferences prefs = await SharedPreferences.getInstance();
     int value = prefs.getInt(key);
     return value;
+  }
+
+  @override
+  void initState() {
+    super.initState();
+    checkvals();
   }
 
   @override
@@ -298,15 +329,4 @@ class _InfoState extends State<Info> {
     saveIntPreference("cycleLength", data.cycleLength);
     return true;
   }
-  /*myCheckState() {
-    setState(() {
-      if (_check) {
-        _check = !_check;
-        print(_check);
-      } else {
-        _check = !_check;
-        print(_check);
-      }
-    });
-  }*/
 }
