@@ -180,16 +180,8 @@ class _InfoState extends State<Info> {
                   subtitle: Row(
                     mainAxisSize: MainAxisSize.min,
                     children: <Widget>[
-                      /* Text(
-                      "forgot?",
-                      style: TextStyle(fontSize: 16.0),
-                    ),
-                    Checkbox(
-                      onChanged: (bool e) => myCheckState(),
-                      value: _check,
-                    ),*/
                       Text(
-                          "Selected: ${_lastPeriod.day.toString()}/${_lastPeriod.month.toString().padLeft(2, '0')}/${_lastPeriod.year.toString().padLeft(2, '0')}"),
+                          "Selected: ${_lastPeriod.day.toString()} / ${_lastPeriod.month.toString().padLeft(2, '0')} / ${_lastPeriod.year.toString().padLeft(2, '0')}"),
                     ],
                   ),
                   leading: IconButton(

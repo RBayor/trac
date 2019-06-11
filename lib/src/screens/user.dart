@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:intl/intl.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 class UserPage extends StatefulWidget {
   @override
@@ -6,8 +8,68 @@ class UserPage extends StatefulWidget {
 }
 
 class _UserPageState extends State<UserPage> {
+  bool isProfile = true;
+  final formKey = GlobalKey<FormState>();
+  String _name;
+  String _email;
+  String _birth;
+
+  Future<bool> saveStringPreference(String key, String value) async {
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    prefs.setString(key, value);
+    return prefs.commit();
+  }
+
+  Future<String> getStringPreference(String key) async {
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    String value = prefs.getString(key);
+    return value;
+  }
+
+  saveData() async {
+    final form = formKey.currentState;
+    form.save();
+    await saveStringPreference("Name", "$_name");
+    await saveStringPreference("Email", "$_email");
+    getData();
+    rebuild();
+  }
+
+  getData() async {
+    _name = await getStringPreference("Name");
+    _email = await getStringPreference("Email");
+    _birth = await getStringPreference("birthYear");
+    //_birth = DateFormat("yyyy-MM-dd HH:mm:ss:ms").parse(birthString);
+    setState(() {});
+  }
+
+  rebuild() {
+    setState(() {
+      isProfile = !isProfile;
+      print(isProfile);
+      //print(_birth);
+    });
+  }
+
+  @override
+  void initState() {
+    super.initState();
+    getData();
+  }
+
   @override
   Widget build(BuildContext context) {
+    if (isProfile) {
+      return userProfile();
+    } else {
+      return Form(
+        key: formKey,
+        child: updateUser(),
+      );
+    }
+  }
+
+  Widget userProfile() {
     return Scaffold(
       body: Stack(
         children: <Widget>[
@@ -39,21 +101,21 @@ class _UserPageState extends State<UserPage> {
                   height: 50.0,
                 ),
                 Text(
-                  "Jane Doe",
+                  "$_name",
                   style: TextStyle(fontSize: 35.0, fontWeight: FontWeight.w400),
                 ),
                 SizedBox(
                   height: 15.0,
                 ),
                 Text(
-                  "janedoe@email.com",
+                  "$_email",
                   style: TextStyle(fontSize: 18.0, fontStyle: FontStyle.italic),
                 ),
                 SizedBox(
                   height: 15.0,
                 ),
                 Text(
-                  "12/01/1998",
+                  "${_birth.substring(0, 11)}",
                   style: TextStyle(fontSize: 18.0, fontStyle: FontStyle.italic),
                 ),
                 SizedBox(
@@ -61,7 +123,54 @@ class _UserPageState extends State<UserPage> {
                 ),
                 FloatingActionButton(
                   child: Icon(Icons.edit),
-                  onPressed: () {},
+                  onPressed: rebuild,
+                )
+              ],
+            ),
+          )
+        ],
+      ),
+    );
+  }
+
+  Widget updateUser() {
+    return Scaffold(
+      appBar: AppBar(
+        centerTitle: true,
+        title: Text("Update Profile"),
+      ),
+      body: Column(
+        mainAxisAlignment: MainAxisAlignment.center,
+        children: <Widget>[
+          Padding(
+            padding: const EdgeInsets.only(left: 30, right: 30),
+            child: TextFormField(
+              autofocus: true,
+              decoration: InputDecoration(
+                labelText: 'Name',
+              ),
+              onSaved: (value) => _name = value,
+            ),
+          ),
+          Padding(
+            padding: const EdgeInsets.only(left: 30, right: 30),
+            child: TextFormField(
+              decoration: InputDecoration(labelText: 'Email'),
+              onSaved: (value) => _email = value,
+            ),
+          ),
+          Padding(
+            padding: const EdgeInsets.only(right: 25, top: 25),
+            child: Row(
+              mainAxisAlignment: MainAxisAlignment.end,
+              children: <Widget>[
+                FlatButton(
+                  onPressed: rebuild,
+                  child: Text("Cancel"),
+                ),
+                RaisedButton(
+                  onPressed: saveData,
+                  child: Text("Update"),
                 )
               ],
             ),
@@ -85,6 +194,6 @@ class getClipper extends CustomClipper<Path> {
 
   @override
   bool shouldReclip(CustomClipper<Path> oldClipper) {
-    return null;
+    return false;
   }
 }

@@ -52,6 +52,12 @@ class _HomeState extends State<Home> {
     return value;
   }
 
+  Future<bool> saveStringPreference(String key, String value) async {
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    prefs.setString(key, value);
+    return prefs.commit();
+  }
+
   changePeriod() async {
     final DateTime picked = await showDatePicker(
         context: context,
@@ -67,7 +73,9 @@ class _HomeState extends State<Home> {
       DateTime periodStart = picked;
       DateTime ovulationEnd = periodStart.subtract(end);
       DateTime ovulationStart = ovulationEnd.subtract(week);
+      DateTime last = ovulationStart.subtract(week);
       DateTime periodEnd = periodStart.add(duration);
+      saveStringPreference("lastPeriod", last.toString());
       setState(() {
         _ovulationStart = ovulationStart;
         _ovulationEnd = ovulationEnd;
@@ -197,105 +205,111 @@ class _HomeState extends State<Home> {
           ),
         ],
       ),
-      body: Padding(
-        padding: const EdgeInsets.only(top: 30),
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.start,
-          children: <Widget>[
-            Card(
-                elevation: 8.0,
-                margin: EdgeInsets.only(
-                    left: 15.0, right: 15.0, top: 15.0, bottom: 20.0),
-                shape: RoundedRectangleBorder(
-                  borderRadius: BorderRadius.circular(10.0),
-                ),
-                child: Padding(
-                  padding: const EdgeInsets.all(10.0),
+      body: ListView(
+        children: <Widget>[
+          Padding(
+            padding: const EdgeInsets.only(top: 30),
+            child: Column(
+              mainAxisAlignment: MainAxisAlignment.start,
+              children: <Widget>[
+                Card(
+                    elevation: 8.0,
+                    margin: EdgeInsets.only(
+                        left: 15.0, right: 15.0, top: 15.0, bottom: 20.0),
+                    shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(10.0),
+                    ),
+                    child: Padding(
+                      padding: const EdgeInsets.all(10.0),
+                      child: ListTile(
+                          title: Text(
+                            "Calendar",
+                            style: TextStyle(
+                                fontSize: 20.0, fontWeight: FontWeight.bold),
+                          ),
+                          subtitle: Container(
+                            child: Calendar(
+                              showTodayAction: false,
+                              isExpandable: false,
+                              initialCalendarDateOverride: _fertile,
+                              onDateSelected: (_today) => handleNewDate(
+                                    _today,
+                                  ),
+                            ),
+                          )),
+                    )),
+                Card(
+                  elevation: 8.0,
+                  margin: EdgeInsets.only(
+                      left: 15.0, right: 15.0, top: 15.0, bottom: 20.0),
+                  shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(10.0),
+                  ),
                   child: ListTile(
-                      title: Text(
-                        "Calendar",
-                        style: TextStyle(
-                            fontSize: 25.0, fontWeight: FontWeight.bold),
-                      ),
-                      subtitle: Container(
-                        child: Calendar(
-                          showTodayAction: false,
-                          isExpandable: false,
-                          initialCalendarDateOverride: _fertile,
-                          onDateSelected: (_today) => handleNewDate(
-                                _today,
-                              ),
+                    title: Text(
+                      "Ovulation",
+                      style: TextStyle(
+                          fontSize: 20.0, fontWeight: FontWeight.bold),
+                    ),
+                    subtitle: Column(
+                      mainAxisAlignment: MainAxisAlignment.start,
+                      children: <Widget>[
+                        Padding(
+                          padding: const EdgeInsets.all(8.0),
+                          child: Text(
+                              "Start ${_ovulationStart.day} / ${_ovulationStart.month} / ${_ovulationStart.year}",
+                              style: TextStyle(
+                                  fontSize: 16.0, fontWeight: FontWeight.w400)),
                         ),
-                      )),
-                )),
-            Card(
-              elevation: 8.0,
-              margin: EdgeInsets.only(
-                  left: 15.0, right: 15.0, top: 15.0, bottom: 20.0),
-              shape: RoundedRectangleBorder(
-                borderRadius: BorderRadius.circular(10.0),
-              ),
-              child: ListTile(
-                title: Text(
-                  "Ovulation",
-                  style: TextStyle(fontSize: 25.0, fontWeight: FontWeight.bold),
-                ),
-                subtitle: Column(
-                  mainAxisAlignment: MainAxisAlignment.start,
-                  children: <Widget>[
-                    Padding(
-                      padding: const EdgeInsets.all(8.0),
-                      child: Text(
-                          "Start ${_ovulationStart.day} / ${_ovulationStart.month} / ${_ovulationStart.year}",
-                          style: TextStyle(
-                              fontSize: 18.0, fontWeight: FontWeight.w400)),
+                        Padding(
+                          padding: const EdgeInsets.all(8.0),
+                          child: Text(
+                              "End ${_ovulationEnd.day} / ${_ovulationEnd.month} / ${_ovulationEnd.year}",
+                              style: TextStyle(
+                                  fontSize: 16.0, fontWeight: FontWeight.w400)),
+                        )
+                      ],
                     ),
-                    Padding(
-                      padding: const EdgeInsets.all(8.0),
-                      child: Text(
-                          "End ${_ovulationEnd.day} / ${_ovulationEnd.month} / ${_ovulationEnd.year}",
-                          style: TextStyle(
-                              fontSize: 18.0, fontWeight: FontWeight.w400)),
-                    )
-                  ],
+                  ),
                 ),
-              ),
+                Card(
+                  elevation: 8.0,
+                  margin: EdgeInsets.only(
+                      left: 15.0, right: 15.0, top: 15.0, bottom: 20.0),
+                  shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(10.0),
+                  ),
+                  child: ListTile(
+                    title: Text(
+                      "Period",
+                      style: TextStyle(
+                          fontSize: 20.0, fontWeight: FontWeight.bold),
+                    ),
+                    subtitle: Column(
+                      mainAxisAlignment: MainAxisAlignment.start,
+                      children: <Widget>[
+                        Padding(
+                          padding: const EdgeInsets.all(8.0),
+                          child: Text(
+                              "Start: ${_periodStart.day} / ${_periodStart.month} / ${_periodStart.year}",
+                              style: TextStyle(
+                                  fontSize: 16.0, fontWeight: FontWeight.w400)),
+                        ),
+                        Padding(
+                          padding: const EdgeInsets.all(8.0),
+                          child: Text(
+                              "End: ${_periodEnd.day} / ${_periodEnd.month} / ${_periodEnd.year}",
+                              style: TextStyle(
+                                  fontSize: 16.0, fontWeight: FontWeight.w400)),
+                        )
+                      ],
+                    ),
+                  ),
+                )
+              ],
             ),
-            Card(
-              elevation: 8.0,
-              margin: EdgeInsets.only(
-                  left: 15.0, right: 15.0, top: 15.0, bottom: 20.0),
-              shape: RoundedRectangleBorder(
-                borderRadius: BorderRadius.circular(10.0),
-              ),
-              child: ListTile(
-                title: Text(
-                  "Period",
-                  style: TextStyle(fontSize: 25.0, fontWeight: FontWeight.bold),
-                ),
-                subtitle: Column(
-                  mainAxisAlignment: MainAxisAlignment.start,
-                  children: <Widget>[
-                    Padding(
-                      padding: const EdgeInsets.all(8.0),
-                      child: Text(
-                          "Start: ${_periodStart.day} / ${_periodStart.month} / ${_periodStart.year}",
-                          style: TextStyle(
-                              fontSize: 18.0, fontWeight: FontWeight.w400)),
-                    ),
-                    Padding(
-                      padding: const EdgeInsets.all(8.0),
-                      child: Text(
-                          "End: ${_periodEnd.day} / ${_periodEnd.month} / ${_periodEnd.year}",
-                          style: TextStyle(
-                              fontSize: 18.0, fontWeight: FontWeight.w400)),
-                    )
-                  ],
-                ),
-              ),
-            )
-          ],
-        ),
+          ),
+        ],
       ),
       floatingActionButton: Row(
         crossAxisAlignment: CrossAxisAlignment.end,

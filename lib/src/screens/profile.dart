@@ -25,7 +25,7 @@ class Profile extends StatelessWidget {
                     leading: Icon(Icons.person, color: Colors.deepPurple),
                     title: Text("Profile"),
                     onTap: () {
-                      Navigator.of(context).push(
+                      Navigator.push(context,
                           MaterialPageRoute(builder: (context) => UserPage()));
                     },
                   ),
